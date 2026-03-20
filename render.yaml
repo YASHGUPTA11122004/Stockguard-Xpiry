@@ -17,4 +17,3 @@ services:
 databases:
   - name: stockguard-db
     databaseName: stockguard
-    user: postgres
