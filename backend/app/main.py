@@ -5,8 +5,17 @@ from jose import jwt
 
 from . import models, schemas, database, auth, utils
 
+from fastapi.middleware.cors import CORSMiddleware
+
 # ---------------- INIT ----------------
 app = FastAPI(title="StockGuard API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 models.Base.metadata.create_all(bind=database.engine)
 
