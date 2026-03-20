@@ -46,12 +46,12 @@ def signup(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    # ✅ CORRECT HASH FUNCTION
     hashed = utils.hash(user.password)
 
+    # ✅ FIXED FIELD NAME
     new_user = models.User(
         email=user.email,
-        password_hash=hashed
+        hashed_password=hashed
     )
 
     db.add(new_user)
@@ -65,7 +65,8 @@ def signup(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
 def login(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
 
-    if not db_user or not auth.verify_password(user.password, db_user.password_hash):
+    # ✅ FIXED FIELD NAME
+    if not db_user or not auth.verify_password(user.password, db_user.hashed_password):
         raise HTTPException(status_code=400, detail="Invalid credentials")
 
     token = auth.create_access_token({"sub": str(db_user.id)})
