@@ -1,16 +1,7 @@
-const BASE_URL = import.meta.env.VITE_API_URL || "https://your-render-url.onrender.com";
+const API_BASE = "https://stockguard-api.onrender.com";
 
-export const getItems = async () => {
-  const res = await fetch(`${BASE_URL}/items`, {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("token"),
-    },
-  });
-  return res.json();
-};
-
-export const loginUser = async (data) => {
-  const res = await fetch(`${BASE_URL}/login`, {
+export const signup = async (data) => {
+  const res = await fetch(`${API_BASE}/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -20,8 +11,8 @@ export const loginUser = async (data) => {
   return res.json();
 };
 
-export const signupUser = async (data) => {
-  const res = await fetch(`${BASE_URL}/signup`, {
+export const login = async (data) => {
+  const res = await fetch(`${API_BASE}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
