@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # ---------------- INIT ----------------
 app = FastAPI(title="StockGuard API")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -46,7 +47,12 @@ def signup(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
 
     hashed = auth.hash_password(user.password)
-    new_user = models.User(email=user.email, hashed_password=hashed)
+
+    # ✅ FIXED FIELD NAME
+    new_user = models.User(
+        email=user.email,
+        password_hash=hashed
+    )
 
     db.add(new_user)
     db.commit()
@@ -59,7 +65,7 @@ def signup(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
 def login(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
 
-    if not db_user or not auth.verify_password(user.password, db_user.hashed_password):
+    if not db_user or not auth.verify_password(user.password, db_user.password_hash):
         raise HTTPException(status_code=400, detail="Invalid credentials")
 
     token = auth.create_access_token({"sub": str(db_user.id)})
@@ -89,10 +95,9 @@ def get_items(
     current_user=Depends(get_current_user),
 ):
     items = db.query(models.Item).filter(
-        models.Item.owner_id == current_user.id  # 🔐 DATA ISOLATION
+        models.Item.owner_id == current_user.id
     ).all()
 
-    # sort by urgency
     items = sorted(
         items,
         key=lambda x: utils.calculate_urgency(x.category, x.expiry_date),
