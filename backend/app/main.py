@@ -46,9 +46,9 @@ def signup(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    hashed = auth.hash_password(user.password)
+    # ✅ CORRECT HASH FUNCTION
+    hashed = utils.hash(user.password)
 
-    # ✅ FIXED FIELD NAME
     new_user = models.User(
         email=user.email,
         password_hash=hashed
