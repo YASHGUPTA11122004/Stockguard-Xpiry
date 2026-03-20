@@ -1,1 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Background */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at top, #18181b, #020617);
+  color: white;
+}
+
+/* Glass Card */
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(18px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Scrollbar (premium feel) */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: #52525b;
+  border-radius: 10px;
+}
