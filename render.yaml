@@ -5,15 +5,7 @@ services:
     buildCommand: "pip install -r backend/requirements.txt"
     startCommand: "gunicorn backend.app.main:app -k uvicorn.workers.UvicornWorker"
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: stockguard-db
-          property: connectionString
       - key: JWT_SECRET
         value: supersecretkey
       - key: ALGORITHM
         value: HS256
-
-databases:
-  - name: stockguard-db
-    databaseName: stockguard
